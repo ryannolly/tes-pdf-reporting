@@ -2,34 +2,46 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$mpdf = new \Mpdf\Mpdf();
+$mpdf = new \Mpdf\Mpdf(['mode'=>'utf-8',
+						'format'=>'A4',
+						'oritentation'=>'P']);
 $html = '
 <!DOCTYPE html>
 <head>
     <title>Cetak Berita Acara Ujian Mempertahankan Skripsi</title>
 </head>
 <style>
+	@page {
+	   size: 8,3 in 11,7 in;
+	}
+
     *{
-        margin: 0;
-        padding: 0;
+        margin: 0px;
+        padding: 0px;
     }
 
     .header{
         width: 100%;
-        height: 150px;
+        height: 75px;
         box-sizing: content-box;
-        padding: 24px;
+        padding: 0px;
+    }
+
+    .header  p,h1,h2{
+    	line-height:.3;
     }
 
     .kopsurat{
         width: calc(100% - 150px);
         float: left;
-        height: 150px;
+        height: 0px;
     }
 
     .logo{
         height: 150px;
         float: left;
+        position:absolute;
+        z-index:-1;
     }
 
     .kementrian{
@@ -42,7 +54,7 @@ $html = '
     }
 
     .isi{
-        padding: 10px 0;
+        padding: 0px;
         vertical-align: middle;
     }
 
@@ -124,8 +136,12 @@ $html = '
         height: 20px;
     }
 
-    .table-nilai, .table-keterangan-nilai{
+    .table-nilai , .table-keterangan-nilai  {
         border-collapse: collapse;
+    }
+
+    .table-nilai th , .table-keterangan-nilai th , .table-nilai tr td , .table-keterangan-nilai tr td  {
+    	border: .5px solid black;
     }
 
     .table-nilai{
@@ -144,7 +160,9 @@ $html = '
 </style>
 <body>
     <header class="header">
-        <img src="unimed.png" alt="" class="logo">
+    	<table border="0">
+        <tr><td><img src="unimed.png" alt="" class="logo"> </td>
+        <td>
         <div class="kopsurat">
             <div class="isi">
             <p class="kementrian tengah">KEMENTRIAN PENDIDIKAN DAN KEBUDAYAAN</p>
@@ -153,13 +171,14 @@ $html = '
             <p class="tengah">Jl. Williem Iskandar Psr. V Medan Estate-Kotak Pos No. 1589 Medan 20211</p>
             <p class="tengah">Telp. (061) 6625970, Fax. (061) 614002-613319</p>
             </div>
-        </div>
+        </div><td>
+        </table>
     </header>
     <hr>
     <main>
         <p class="tengah judul">NILAI AKHIR UJIAN SKRIPSI</p>
         <div class="isi-surat">
-            <table class="table" width="100%">
+            <table class="table" width="100%" >
                 <tr>
                     <td width="30%">Nama Mahasiswa</td>
                     <td width=3%>:</td>
@@ -194,10 +213,10 @@ $html = '
         </div>
 
         <div class="hasil-ujian">
-            <table class="table-nilai" border="1px">
+            <table class="table-nilai" >
                 <tr>
-                    <th rowspan="2" width="3%" style="background-color: #9eedff;">No.</th>
-                    <th rowspan="2" width="57%" style="background-color: #9eedff;">Nama Dosen Penguji</th>
+                    <th rowspan="2" width="5%" style="background-color: #9eedff;">No.</th>
+                    <th rowspan="2" width="53%" style="background-color: #9eedff;">Nama Dosen Penguji</th>
                     <th colspan="3" width="40%" style="background-color: #9eedff;">Nilai Ujian Mempertahankan Skripsi</th>
                 </tr>
                 <tr>
@@ -264,7 +283,7 @@ $html = '
                     <td>Konversi nilai angka ke nilai huruf, sesuai dengan SK Rektor No. 715/J39.Kep/PP/2005, sebagai berikut:</td>
                 </tr>
             </table>
-            <table width="50%" border="1px" class="table-keterangan-nilai">
+            <table width="50%" class="table-keterangan-nilai">
                 <tr>
                     <th><center>No.</center></th>
                     <th><center>Rentang Nilai Angka</center></th>
@@ -313,6 +332,5 @@ $html = '
 </body>
 </html>
 ';
-$mpdf->SetDisplayMode(85);
 $mpdf->WriteHTML($html);
 $mpdf->Output();
